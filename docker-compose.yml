@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  user_auth:
+    build:
+      context: ./user_auth
+      dockerfile: Dockerfile
+    image: user_auth_service:latest
+    container_name: user_auth_container
+    ports:
+      - "5001:5000"
+    networks:
+      - microservices_network
+
+  product_management:
+    build:
+      context: ./product_management
+      dockerfile: Dockerfile
+    image: product_management_service:latest
+    container_name: product_management_container
+    ports:
+      - "5002:5000"
+    networks:
+      - microservices_network
+
+  order_processing:
+    build:
+      context: ./order_processing
+      dockerfile: Dockerfile
+    image: order_processing_service:latest
+    container_name: order_processing_container
+    ports:
+      - "5003:5000"
+    environment:
+      PRODUCT_SERVICE_URL: http://product_management:5000
+    networks:
+      - microservices_network
+
+networks:
+  microservices_network:
