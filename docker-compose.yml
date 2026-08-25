@@ -1,6 +1,5 @@
-version: '3.8'
-
 services:
+
   user_auth:
     build:
       context: ./user_auth
@@ -8,7 +7,9 @@ services:
     image: user_auth_service:latest
     container_name: user_auth_container
     ports:
-      - "5001:5000"
+      - "${USER_AUTH_PORT}:5000"
+    environment:
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
     networks:
       - microservices_network
 
@@ -19,7 +20,9 @@ services:
     image: product_management_service:latest
     container_name: product_management_container
     ports:
-      - "5002:5000"
+      - "${PRODUCT_SERVICE_PORT}:5000"
+    environment:
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
     networks:
       - microservices_network
 
@@ -30,8 +33,9 @@ services:
     image: order_processing_service:latest
     container_name: order_processing_container
     ports:
-      - "5003:5000"
+      - "${ORDER_PROCESSING_PORT}:5000"
     environment:
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       PRODUCT_SERVICE_URL: http://product_management:5000
     networks:
       - microservices_network
